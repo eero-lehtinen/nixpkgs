@@ -35,6 +35,7 @@
   neovim-unwrapped,
   nix,
   nodejs,
+  oklch-color-picker,
   openscad,
   openssh,
   openssl,
@@ -3692,6 +3693,17 @@ assertNoAdditions {
 
   oil-lsp-diagnostics-nvim = super.oil-lsp-diagnostics-nvim.overrideAttrs {
     dependencies = [ self.oil-nvim ];
+  };
+
+  oklch-color-picker-nvim = super.oklch-color-picker-nvim.overrideAttrs {
+    runtimeDeps = [ oklch-color-picker ];
+
+    # With auto_download disabled the plugin runs the picker from PATH and
+    # loads the parser library from the lib directory next to it.
+    postPatch = ''
+      substituteInPlace lua/oklch-color-picker/init.lua \
+        --replace-fail 'auto_download = true,' 'auto_download = false,'
+    '';
   };
 
   ollama-nvim = super.ollama-nvim.overrideAttrs {
